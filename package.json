@@ -16,12 +16,14 @@
   "type": "commonjs",
   "dependencies": {
     "@prisma/client": "^6.11.1",
+    "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
     "dotenv": "^17.1.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/mysql": "^2.15.27",
