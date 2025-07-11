@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authenticateJWT = void 0;
+exports.authorize = exports.authenticateJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const secret = process.env.JWTKEY;
 const authenticateJWT = (req, res, next) => {
@@ -26,3 +26,16 @@ const authenticateJWT = (req, res, next) => {
     });
 };
 exports.authenticateJWT = authenticateJWT;
+const authorize = (allowedRoles) => {
+    return (req, res, next) => {
+        const user = req.user;
+        if (!(user === null || user === void 0 ? void 0 : user.role) || !allowedRoles.includes(user.role)) {
+            return res
+                .status(403)
+                .json({ error: "Access forbidden: insufficient rights" });
+        }
+        console.log(`User with role ${user.role} authorized.`);
+        next();
+    };
+};
+exports.authorize = authorize;

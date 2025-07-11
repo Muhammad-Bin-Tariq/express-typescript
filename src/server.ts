@@ -9,6 +9,8 @@ import loginRouter from "./routes/LoginRouter";
 import profileRouter from "./routes/ProfileRouter";
 import registerRouter from "./routes/RegisterRouter";
 
+import types from "./types/express";
+
 const app = express();
 const port = process.env.PORT;
 console.log(port);

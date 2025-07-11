@@ -11,8 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteUserByUsername = exports.updateUsername = exports.getUsers = exports.adminDetails = void 0;
 // import db from "../server";
-const prisma_1 = require("../generated/prisma");
-const prisma = new prisma_1.PrismaClient();
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 //Admin Personal Details
 const adminDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

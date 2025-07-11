@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userDetails = void 0;
-const prisma_1 = require("../generated/prisma");
-const prisma = new prisma_1.PrismaClient();
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const userDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const email = (_a = req.user) === null || _a === void 0 ? void 0 : _a.email;
