@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { PrismaClient } from "../generated/prisma";
+import bcrypt from "bcrypt";
+import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
+const SALT_ROUNDS = 10;
 
 export const register = async (req: Request, res: Response): Promise<any> => {
   const {
@@ -14,16 +16,25 @@ export const register = async (req: Request, res: Response): Promise<any> => {
   }: { username: string; email: string; password: string } = req.body;
 
   try {
-    // 1. Check if email already exists
-    const existingUser = await prisma.user.findUnique({
+    // Check if email already exists
+    const existingEmail = await prisma.user.findUnique({
       where: { email },
     });
 
-    if (existingUser) {
+    if (existingEmail) {
       return res.status(400).json({ error: "Email already in use" });
     }
 
-    // 2. Get the "User" role
+    // Check if username already exists
+    const existingUsername = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (existingUsername) {
+      return res.status(400).json({ error: "Username already in use" });
+    }
+
+    // Get the "User" role
     const userRole = await prisma.role.findUnique({
       where: { name: "User" },
     });
@@ -32,12 +43,15 @@ export const register = async (req: Request, res: Response): Promise<any> => {
       return res.status(500).json({ error: "User role not found in database" });
     }
 
-    // 3. Create new user
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+    // Create the new user
     await prisma.user.create({
       data: {
         username,
         email,
-        password, // 🔒 Optional: hash this in production later
+        password: hashedPassword,
         roleId: userRole.id,
       },
     });

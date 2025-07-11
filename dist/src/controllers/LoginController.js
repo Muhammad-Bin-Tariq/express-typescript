@@ -16,8 +16,8 @@ exports.login = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const prisma_1 = require("../generated/prisma"); // or "@prisma/client"
-const prisma = new prisma_1.PrismaClient();
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
 const secret = process.env.JWTKEY;
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = req.body;
