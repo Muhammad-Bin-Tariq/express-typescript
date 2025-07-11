@@ -1,6 +1,5 @@
 import express from "express";
-import { authenticateJWT } from "../middleware/authenticateJWT";
-import { authorize } from "../middleware/authorize";
+import { authenticateJWT, authorize } from "../middleware/authenticateJWT";
 import { userDetails } from "../controllers/ProfileController";
 
 const router = express.Router();
