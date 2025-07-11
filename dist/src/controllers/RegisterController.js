@@ -15,31 +15,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
+const SALT_ROUNDS = 10;
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, email, password, } = req.body;
     try {
-        // 1. Check if email already exists
-        const existingUser = yield prisma.user.findUnique({
+        // Check if email already exists
+        const existingEmail = yield prisma.user.findUnique({
             where: { email },
         });
-        if (existingUser) {
+        if (existingEmail) {
             return res.status(400).json({ error: "Email already in use" });
         }
-        // 2. Get the "User" role
+        // Check if username already exists
+        const existingUsername = yield prisma.user.findUnique({
+            where: { username },
+        });
+        if (existingUsername) {
+            return res.status(400).json({ error: "Username already in use" });
+        }
+        // Get the "User" role
         const userRole = yield prisma.role.findUnique({
             where: { name: "User" },
         });
         if (!userRole) {
             return res.status(500).json({ error: "User role not found in database" });
         }
-        // 3. Create new user
+        // Hash the password
+        const hashedPassword = yield bcrypt_1.default.hash(password, SALT_ROUNDS);
+        // Create the new user
         yield prisma.user.create({
             data: {
                 username,
                 email,
-                password, // 🔒 Optional: hash this in production later
+                password: hashedPassword,
                 roleId: userRole.id,
             },
         });
